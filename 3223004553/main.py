@@ -6,10 +6,38 @@
 
 import sys
 import os
+import logging
 from typing import Optional
 
 from similarity import calculate_text_similarity
 from file_handler import read_text_file, write_text_file
+
+# 配置日志
+def setup_logger():
+    # 修复中文编码问题，兼容Python 3.8及以下版本
+    logger = logging.getLogger('plagiarism_checker')
+    logger.setLevel(logging.INFO)
+    
+    # 避免重复添加处理器
+    if not logger.handlers:
+        # 创建文件处理器，显式指定UTF-8编码
+        try:
+            # 尝试使用FileHandler设置编码
+            handler = logging.FileHandler('plagiarism_checker.log', encoding='utf-8')
+        except TypeError:
+            # 对于不支持encoding参数的旧版本Python
+            handler = logging.FileHandler('plagiarism_checker.log')
+            
+        # 设置日志格式
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        
+        # 添加处理器到logger
+        logger.addHandler(handler)
+    
+    return logger
+
+logger = setup_logger()
 
 
 def print_usage():
@@ -61,48 +89,60 @@ def calculate_plagiarism_rate(original_file: str, plagiarized_file: str, output_
     """
     try:
         # 读取原文
+        logger.info(f"正在读取原文文件: {original_file}")
         print(f"正在读取原文文件: {original_file}")
         original_text = read_text_file(original_file)
         if original_text is None:
+            logger.error("错误: 无法读取原文文件")
             print("错误: 无法读取原文文件")
             return False
         
         # 读取抄袭版论文
+        logger.info(f"正在读取抄袭版论文文件: {plagiarized_file}")
         print(f"正在读取抄袭版论文文件: {plagiarized_file}")
         plagiarized_text = read_text_file(plagiarized_file)
         if plagiarized_text is None:
+            logger.error("错误: 无法读取抄袭版论文文件")
             print("错误: 无法读取抄袭版论文文件")
             return False
         
         # 检查文本是否为空
         if not original_text.strip():
+            logger.error("错误: 原文文件为空")
             print("错误: 原文文件为空")
             return False
         
         if not plagiarized_text.strip():
+            logger.error("错误: 抄袭版论文文件为空")
             print("错误: 抄袭版论文文件为空")
             return False
         
         # 计算相似度
+        logger.info("正在计算文本相似度...")
         print("正在计算文本相似度...")
         similarity = calculate_text_similarity(original_text, plagiarized_text)
         
         # 输出结果
+        logger.info(f"计算完成，相似度: {similarity}")
         print(f"计算完成，相似度: {similarity}")
         
         # 写入结果文件
+        logger.info(f"正在写入结果文件: {output_file}")
         print(f"正在写入结果文件: {output_file}")
         success = write_text_file(output_file, str(similarity))
         
         if success:
+            logger.info("论文查重完成！")
             print("论文查重完成！")
             return True
         else:
+            logger.error("错误: 无法写入结果文件")
             print("错误: 无法写入结果文件")
             return False
             
     except Exception as e:
         # 处理异常
+        logger.error(f"计算过程中发生错误: {e}")
         print(f"计算过程中发生错误: {e}")
         return False
 

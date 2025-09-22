@@ -6,7 +6,35 @@
 
 import os
 import sys
+import logging
 from typing import Optional
+
+# 配置日志
+def setup_logger():
+    # 修复中文编码问题，兼容Python 3.8及以下版本
+    logger = logging.getLogger('plagiarism_checker')
+    logger.setLevel(logging.INFO)
+    
+    # 避免重复添加处理器
+    if not logger.handlers:
+        # 创建文件处理器，显式指定UTF-8编码
+        try:
+            # 尝试使用FileHandler设置编码
+            handler = logging.FileHandler('plagiarism_checker.log', encoding='utf-8')
+        except TypeError:
+            # 对于不支持encoding参数的旧版本Python
+            handler = logging.FileHandler('plagiarism_checker.log')
+            
+        # 设置日志格式
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        
+        # 添加处理器到logger
+        logger.addHandler(handler)
+    
+    return logger
+
+logger = setup_logger()
 
 
 class FileHandler:
@@ -14,7 +42,10 @@ class FileHandler:
     
     def __init__(self):
         """初始化文件处理器"""
-        self.supported_encodings = ['utf-8', 'gbk', 'gb2312', 'utf-8-sig']
+        # 支持的文件编码格式列表
+        self.supported_encodings = ['utf-8', 'gbk', 'gb2312', 'latin-1', 'utf-8-sig']
+        # Windows路径长度限制（260个字符）
+        self.MAX_PATH_LENGTH = 260
     
     def read_file(self, file_path: str) -> Optional[str]:
         """
@@ -103,9 +134,13 @@ class FileHandler:
         if len(file_path) > 260:  # Windows路径长度限制
             return False
         
-        # 检查是否包含非法字符
-        illegal_chars = ['<', '>', ':', '"', '|', '?', '*']
+        # 检查是否包含非法字符，但允许Windows驱动器号后的冒号
+        illegal_chars = ['<', '>', '"', '|', '?', '*']
         if any(char in file_path for char in illegal_chars):
+            return False
+        
+        # 特别检查冒号 - 只允许Windows驱动器号格式的冒号 (X:)
+        if ':' in file_path and not (len(file_path) >= 2 and file_path[1] == ':' and file_path[0].isalpha()):
             return False
         
         return True
@@ -126,6 +161,48 @@ class FileHandler:
             return -1
         except Exception:
             return -1
+    
+    def read_large_file(self, file_path: str, chunk_size: int = 1024*1024) -> str:
+        """
+        分块读取大文件，避免一次性加载全部内容到内存
+        
+        Args:
+            file_path: 文件路径
+            chunk_size: 每次读取的字节数，默认为1MB
+            
+        Returns:
+            文件内容字符串，如果读取失败返回空字符串
+        """
+        if not os.path.exists(file_path):
+            logger.error(f"文件不存在: {file_path}")
+            raise FileNotFoundError(f"文件不存在: {file_path}")
+        
+        if not os.access(file_path, os.R_OK):
+            logger.error(f"没有读取权限: {file_path}")
+            raise PermissionError(f"没有读取权限: {file_path}")
+        
+        # 尝试不同的编码方式读取文件
+        content = []
+        for encoding in self.supported_encodings:
+            try:
+                with open(file_path, 'r', encoding=encoding) as file:
+                    while True:
+                        chunk = file.read(chunk_size)
+                        if not chunk:
+                            break
+                        content.append(chunk)
+                # 如果成功读取，返回内容
+                logger.info(f"成功读取大文件: {file_path}, 编码: {encoding}")
+                return ''.join(content)
+            except UnicodeDecodeError:
+                continue
+            except Exception as e:
+                logger.error(f"读取文件时发生错误: {e}")
+                raise Exception(f"读取文件时发生错误: {e}")
+        
+        # 如果所有编码都失败，抛出异常
+        logger.error(f"无法使用支持的编码格式读取文件: {file_path}")
+        raise UnicodeDecodeError("utf-8", b"", 0, 1, "无法使用支持的编码格式读取文件")
 
 
 def read_text_file(file_path: str) -> Optional[str]:
