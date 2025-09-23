@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+    <!-- 背景 -->
+    <rect width="800" height="600" fill="#ffffff"/>
+    
+    <!-- 标题 -->
+    <text x="400" y="40" font-family="Arial" font-size="24" text-anchor="middle" fill="#333333">论文查重系统性能分析图表</text>
+    
+    <!-- 预处理时间图表 -->
+    <text x="250" y="80" font-family="Arial" font-size="18" text-anchor="middle" fill="#333333">文本预处理时间 (秒)</text>
+    
+    <!-- 预处理时间坐标轴 -->
+    <line x1="100" y1="100" x2="100" y2="300" stroke="#333333" stroke-width="2"/>
+    <line x1="100" y1="300" x2="400" y2="300" stroke="#333333" stroke-width="2"/>
+    
+    <!-- Y轴刻度 -->
+    <line x1="95" y1="300" x2="105" y2="300" stroke="#333333" stroke-width="2"/>
+    <line x1="95" y1="250" x2="105" y2="250" stroke="#333333" stroke-width="2"/>
+    <line x1="95" y1="200" x2="105" y2="200" stroke="#333333" stroke-width="2"/>
+    <line x1="95" y1="150" x2="105" y2="150" stroke="#333333" stroke-width="2"/>
+    <line x1="95" y1="100" x2="105" y2="100" stroke="#333333" stroke-width="2"/>
+    
+    <!-- Y轴标签 -->
+    <text x="80" y="305" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.0</text>
+    <text x="80" y="255" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.2</text>
+    <text x="80" y="205" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.4</text>
+    <text x="80" y="155" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.6</text>
+    <text x="80" y="105" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.8</text>
+    
+    <!-- X轴标签 -->
+    <text x="175" y="325" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">0.1MB</text>
+    <text x="275" y="325" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">0.5MB</text>
+    <text x="375" y="325" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">1.0MB</text>
+    
+    <!-- 预处理时间柱状图 -->
+    <rect x="150" y="295" width="50" height="5" fill="#4CAF50" opacity="0.8"/>
+    <rect x="250" y="277" width="50" height="23" fill="#4CAF50" opacity="0.8"/>
+    <rect x="350" y="234" width="50" height="66" fill="#4CAF50" opacity="0.8"/>
+    
+    <!-- 预处理时间数值标签 -->
+    <text x="175" y="285" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">0.0944s</text>
+    <text x="275" y="265" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">0.2748s</text>
+    <text x="375" y="220" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">0.6625s</text>
+    
+    <!-- 相似度计算时间图表 -->
+    <text x="650" y="80" font-family="Arial" font-size="18" text-anchor="middle" fill="#333333">相似度计算时间 (秒)</text>
+    
+    <!-- 相似度计算时间坐标轴 -->
+    <line x1="500" y1="100" x2="500" y2="300" stroke="#333333" stroke-width="2"/>
+    <line x1="500" y1="300" x2="800" y2="300" stroke="#333333" stroke-width="2"/>
+    
+    <!-- Y轴刻度 -->
+    <line x1="495" y1="300" x2="505" y2="300" stroke="#333333" stroke-width="2"/>
+    <line x1="495" y1="250" x2="505" y2="250" stroke="#333333" stroke-width="2"/>
+    <line x1="495" y1="200" x2="505" y2="200" stroke="#333333" stroke-width="2"/>
+    <line x1="495" y1="150" x2="505" y2="150" stroke="#333333" stroke-width="2"/>
+    <line x1="495" y1="100" x2="505" y2="100" stroke="#333333" stroke-width="2"/>
+    
+    <!-- Y轴标签 -->
+    <text x="480" y="305" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.0</text>
+    <text x="480" y="255" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.05</text>
+    <text x="480" y="205" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.1</text>
+    <text x="480" y="155" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.15</text>
+    <text x="480" y="105" font-family="Arial" font-size="12" text-anchor="end" fill="#333333">0.2</text>
+    
+    <!-- X轴标签 -->
+    <text x="575" y="325" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">短文本</text>
+    <text x="675" y="325" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">中等文本</text>
+    <text x="775" y="325" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">长文本</text>
+    
+    <!-- 相似度计算时间柱状图 -->
+    <rect x="550" y="299" width="50" height="1" fill="#2196F3" opacity="0.8"/>
+    <rect x="650" y="298" width="50" height="2" fill="#2196F3" opacity="0.8"/>
+    <rect x="750" y="283" width="50" height="17" fill="#2196F3" opacity="0.8"/>
+    
+    <!-- 相似度计算时间数值标签 -->
+    <text x="575" y="289" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">0.0010s</text>
+    <text x="675" y="288" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">0.0020s</text>
+    <text x="775" y="273" font-family="Arial" font-size="12" text-anchor="middle" fill="#333333">0.1678s</text>
+    
+    <!-- 函数耗时排名 -->
+    <text x="400" y="370" font-family="Arial" font-size="18" text-anchor="middle" fill="#333333">程序中消耗最大的函数</text>
+    
+    <!-- 函数耗时排名列表 -->
+    <rect x="150" y="400" width="500" height="25" fill="#FF9800" opacity="0.8"/>
+    <text x="170" y="418" font-family="Arial" font-size="14" fill="#333333">1. preprocess_text - 文本预处理函数 (占比最大)</text>
+    
+    <rect x="150" y="435" width="400" height="25" fill="#FFC107" opacity="0.8"/>
+    <text x="170" y="453" font-family="Arial" font-size="14" fill="#333333">2. calculate_tf_idf - TF-IDF计算函数</text>
+    
+    <rect x="150" y="470" width="300" height="25" fill="#FFEB3B" opacity="0.8"/>
+    <text x="170" y="488" font-family="Arial" font-size="14" fill="#333333">3. cosine_similarity - 余弦相似度计算</text>
+    
+    <rect x="150" y="505" width="200" height="25" fill="#CDDC39" opacity="0.8"/>
+    <text x="170" y="523" font-family="Arial" font-size="14" fill="#333333">4. read_file / write_file - 文件读写操作</text>
+    
+    <!-- 图例 -->
+    <rect x="300" y="550" width="200" height="40" fill="#f5f5f5" stroke="#ddd" stroke-width="1" rx="5"/>
+    <rect x="320" y="560" width="15" height="10" fill="#4CAF50" opacity="0.8"/>
+    <text x="345" y="568" font-family="Arial" font-size="10" fill="#333333">预处理时间</text>
+    <rect x="420" y="560" width="15" height="10" fill="#2196F3" opacity="0.8"/>
+    <text x="445" y="568" font-family="Arial" font-size="10" fill="#333333">计算时间</text>
+</svg>
