@@ -158,9 +158,9 @@ def generate(r: int, n: int, write_stats: bool = False):
         items.append((expr, val))
 
     with open(ex_path, "w", encoding="utf-8") as ex_f, open(ans_path, "w", encoding="utf-8") as ans_f:
-        for expr, val in items:
-            ex_line = f"{expr.to_str()} ="
-            ans_line = fraction_to_str(val)
+        for idx, (expr, val) in enumerate(items, 1):
+            ex_line = f"{idx}. 四则运算题目{idx}  {expr.to_str()} ="
+            ans_line = f"{idx}. 答案{idx} {fraction_to_str(val)}"
             ex_f.write(ex_line + "\n")
             ans_f.write(ans_line + "\n")
 

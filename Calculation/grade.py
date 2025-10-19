@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 from fractions import Fraction
 from typing import List
 
@@ -12,6 +13,27 @@ PREC = {
     '*': 2,
     '/': 2,
 }
+
+
+def _strip_numbering(s: str) -> str:
+    """去除行首编号（如"1.", 支持"1、"与"1,"）。"""
+    return re.sub(r'^\s*\d+\s*[\.|、|,|，]\s*', '', s.strip())
+
+
+def _strip_exercise_prefix(s: str) -> str:
+    """去除题目前缀：编号 + 可选中文标签。"""
+    s = _strip_numbering(s)
+    s = re.sub(r'^四则运算题目\s*\d+\s*题目\s*[:：]?\s*', '', s)
+    return s
+
+
+def _strip_answer_prefix(s: str) -> str:
+    """去除答案前缀：编号 + 可选中文标签。"""
+    s = _strip_numbering(s)
+    s = re.sub(r'^答案\s*\d+\s*[:：]?\s*', '', s)
+    # 兼容“题目1”作为答案标签的情况
+    s = re.sub(r'^题目\s*\d+\s*[:：]?\s*', '', s)
+    return s
 
 
 def _normalize_tokens(raw_tokens: List[str]) -> List[str]:
@@ -34,12 +56,10 @@ def _normalize_tokens(raw_tokens: List[str]) -> List[str]:
 
 
 def _to_tokens(expr_line: str) -> List[str]:
-    """将题目一行去掉等号并分词。题目中运算符与括号已被空格分隔。"""
-    s = expr_line.strip()
-    # 去掉末尾的等号及其前后的空格
+    """将题目一行去掉编号/中文标签与等号并分词。"""
+    s = _strip_exercise_prefix(expr_line.strip())
     if s.endswith('='):
         s = s[:-1].strip()
-    # 直接按空格分隔（生成器已保证空格）
     raw_tokens = s.split()
     return _normalize_tokens(raw_tokens)
 
@@ -123,9 +143,9 @@ def grade(exercise_file: str, answer_file: str):
 
     # 读取题目与答案（跳过空行），保持编号为非空行的顺序（从1开始）
     with open(exercise_file, 'r', encoding='utf-8') as ef:
-        exercise_lines = [line.strip() for line in ef if line.strip()]
+        exercise_lines = [_strip_exercise_prefix(line.strip()) for line in ef if line.strip()]
     with open(answer_file, 'r', encoding='utf-8') as af:
-        answer_lines = [line.strip() for line in af if line.strip()]
+        answer_lines = [_strip_answer_prefix(line.strip()) for line in af if line.strip()]
 
     # 计算标准答案
     expected: List[Fraction] = []

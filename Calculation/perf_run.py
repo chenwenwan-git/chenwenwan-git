@@ -14,6 +14,8 @@ TEST_CASES: List[Tuple[int, int]] = [
     (10, 1000),
     (20, 1000),
     (20, 5000),
+    (10, 10000),
+    (20, 10000),
 ]
 
 PERF_FILE = os.path.join(os.getcwd(), 'Perf.txt')
