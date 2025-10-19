@@ -33,6 +33,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("-n", type=positive_int, default=100, help="题目数量（默认100，最大10000）")
     parser.add_argument("-e", type=str, help="题目文件路径")
     parser.add_argument("-a", type=str, help="答案文件路径")
+    parser.add_argument("--stats", action="store_true", help="生成时写入Perf.txt性能统计")
 
     # 子命令（原有）
     subparsers = parser.add_subparsers(dest="command")
@@ -40,6 +41,7 @@ def build_parser() -> argparse.ArgumentParser:
     gen_parser = subparsers.add_parser("generate", help="生成题目与答案文件")
     gen_parser.add_argument("-r", type=positive_int, required=True, help="数值范围（不含r）")
     gen_parser.add_argument("-n", type=positive_int, default=100, help="题目数量（默认100，最大10000）")
+    gen_parser.add_argument("--stats", action="store_true", help="生成时写入Perf.txt性能统计")
 
     grade_parser = subparsers.add_parser("grade", help="对题目与答案文件进行评分统计")
     grade_parser.add_argument("-e", type=str, required=True, help="题目文件路径")
@@ -65,8 +67,10 @@ def main(argv=None):
         if n > MAX_N:
             print(f"题目数量最多支持 {MAX_N}，当前输入为 {n}")
             sys.exit(2)
-        out_ex, out_ans = gen.generate(r=r, n=n)
+        out_ex, out_ans = gen.generate(r=r, n=n, write_stats=args.stats)
         print(f"已生成题目与答案：\nExercises -> {out_ex}\nAnswers   -> {out_ans}")
+        if args.stats:
+            print("已写入性能统计：Perf.txt")
         sys.exit(0)
 
     elif args.command == "grade":
@@ -84,8 +88,10 @@ def main(argv=None):
             if n > MAX_N:
                 print(f"题目数量最多支持 {MAX_N}，当前输入为 {n}")
                 sys.exit(2)
-            out_ex, out_ans = gen.generate(r=r, n=n)
+            out_ex, out_ans = gen.generate(r=r, n=n, write_stats=args.stats)
             print(f"已生成题目与答案：\nExercises -> {out_ex}\nAnswers   -> {out_ans}")
+            if args.stats:
+                print("已写入性能统计：Perf.txt")
             sys.exit(0)
         elif args.e and args.a:
             efile = args.e

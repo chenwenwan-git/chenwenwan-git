@@ -1,8 +1,9 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 import os
 import random
+import time
 from fractions import Fraction
 
 from expr import Num, BinOp, Node
@@ -106,7 +107,7 @@ def build_expr_with_ops(r: int, n_ops: int) -> Node:
     return node
 
 
-def generate(r: int, n: int):
+def generate(r: int, n: int, write_stats: bool = False):
     """生成题目与答案文件，满足约束与去重。
     - -r 控制范围（不含 r）
     - -n 控制题目数量（最多 10000）
@@ -114,6 +115,7 @@ def generate(r: int, n: int):
     - e1 - e2 保证 e1 >= e2
     - e1  e2 的结果为真分数（在 0 与 1 之间）
     - 通过 + 与 * 的左右交换去重
+    - write_stats=True 时写入 Perf.txt 性能统计
     """
     if r < 1:
         raise ValueError("-r 范围必须 >= 1")
@@ -123,6 +125,7 @@ def generate(r: int, n: int):
     cwd = os.getcwd()
     ex_path = os.path.join(cwd, "Exercises.txt")
     ans_path = os.path.join(cwd, "Answers.txt")
+    perf_path = os.path.join(cwd, "Perf.txt")
 
     seen = set()
     items = []
@@ -131,16 +134,25 @@ def generate(r: int, n: int):
     target = n
     max_attempts = n * 200
 
+    # 统计信息
+    t0 = time.time()
+    dup_count = 0
+    zero_div_skips = 0
+    op_counts = {1: 0, 2: 0, 3: 0}
+
     while len(items) < target and attempts < max_attempts:
         attempts += 1
         n_ops = random.randint(1, 3)
+        op_counts[n_ops] += 1
         expr = build_expr_with_ops(r, n_ops)
         k = expr.key()
         if k in seen:
+            dup_count += 1
             continue
         try:
             val = expr.evaluate()
         except ZeroDivisionError:
+            zero_div_skips += 1
             continue
         seen.add(k)
         items.append((expr, val))
@@ -151,5 +163,18 @@ def generate(r: int, n: int):
             ans_line = fraction_to_str(val)
             ex_f.write(ex_line + "\n")
             ans_f.write(ans_line + "\n")
+
+    if write_stats:
+        t1 = time.time()
+        took_ms = int((t1 - t0) * 1000)
+        with open(perf_path, "w", encoding="utf-8") as pf:
+            pf.write(f"Range r: {r}\n")
+            pf.write(f"Target n: {n}\n")
+            pf.write(f"Generated: {len(items)}\n")
+            pf.write(f"Attempts: {attempts}\n")
+            pf.write(f"Duplicates skipped: {dup_count}\n")
+            pf.write(f"ZeroDivision skipped: {zero_div_skips}\n")
+            pf.write(f"Op count distribution: 1->{op_counts[1]}, 2->{op_counts[2]}, 3->{op_counts[3]}\n")
+            pf.write(f"Time: {took_ms} ms\n")
 
     return ex_path, ans_path

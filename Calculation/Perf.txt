@@ -1,0 +1,8 @@
+Range r: 12
+Target n: 50
+Generated: 50
+Attempts: 50
+Duplicates skipped: 0
+ZeroDivision skipped: 0
+Op count distribution: 1->18, 2->13, 3->19
+Time: 3 ms
