@@ -23,7 +23,7 @@ def _strip_numbering(s: str) -> str:
 def _strip_exercise_prefix(s: str) -> str:
     """去除题目前缀：编号 + 可选中文标签。"""
     s = _strip_numbering(s)
-    s = re.sub(r'^四则运算题目\s*\d+\s*题目\s*[:：]?\s*', '', s)
+    s = re.sub(r'^四则运算题目\s*\d+\s*', '', s)
     return s
 
 

@@ -1,8 +1,8 @@
 Range r: 20
 Target n: 10000
 Generated: 10000
-Attempts: 10226
-Duplicates skipped: 226
+Attempts: 10248
+Duplicates skipped: 248
 ZeroDivision skipped: 0
-Op count distribution: 1->3377, 2->3437, 3->3412
-Time: 608 ms
+Op count distribution: 1->3470, 2->3317, 3->3461
+Time: 460 ms
